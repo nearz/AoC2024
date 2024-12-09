@@ -1,7 +1,5 @@
 package day5
 
-import "fmt"
-
 func PrintQueue(file bool, paramRules [][]int, paramPqs [][]int) int {
 	var rules [][]int
 	var pqs [][]int
@@ -32,9 +30,30 @@ func CorrectTheQueues(file bool, paramRules [][]int, paramPqs [][]int) int {
 
 	pm := priorityMap(rules)
 	_, iqs := sortedQueues(pm, pqs)
-	fmt.Println(iqs)
-	// total := totalOfMiddles(cqs)
-	return -1
+	for _, q := range iqs {
+		fixQ(pm, q)
+	}
+	total := totalOfMiddles(iqs)
+	return total
+}
+
+func fixQ(pm map[int][]int, q []int) {
+	l := len(q)
+	for i := l - 1; i >= 0; i-- {
+		for j := 0; j < i; j++ {
+			cur := q[j]
+			nxt := q[j+1]
+			before, ex := pm[cur]
+			if ex {
+				in := contains(nxt, before)
+				if in {
+					t := q[j]
+					q[j] = q[j+1]
+					q[j+1] = t
+				}
+			}
+		}
+	}
 }
 
 func totalOfMiddles(cqs [][]int) int {
