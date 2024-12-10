@@ -11,7 +11,7 @@ func TestPartOneAoCInput(t *testing.T) {
 	}
 	total := PartOne(cs)
 	if total != 2543 {
-		t.Errorf("Ceres Search total = %d, expected 3", total)
+		t.Errorf("Ceres Search total = %d, expected 2543", total)
 	}
 }
 
