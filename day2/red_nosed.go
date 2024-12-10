@@ -1,37 +1,12 @@
 package day2
 
-import "fmt"
-
-func RedNosed(file bool, paramReports [][]int) map[string]int {
-	var reports [][]int
-	var err error
-	if file {
-		reports, err = RedNosedFile()
-	} else {
-		reports = paramReports
-		err = nil
-	}
-	if err != nil {
-		fmt.Printf("Error: %s\n", err)
-		return make(map[string]int)
-	}
+func PartOne(reports [][]int) map[string]int {
 	reportsSafety := noDampener(reports)
 	countMap := safetyCount(reportsSafety)
 	return countMap
 }
 
-func RedNosedDampened(file bool, paramReports [][]int) map[string]int {
-	var reports [][]int
-	var err error
-	if file {
-		reports, err = RedNosedFile()
-	} else {
-		reports = paramReports
-		err = nil
-	}
-	if err != nil {
-		fmt.Printf("Error: %s\n", err)
-	}
+func PartTwo(reports [][]int) map[string]int {
 	reportsSafety := dampener(reports)
 	countMap := safetyCount(reportsSafety)
 	return countMap

@@ -6,45 +6,21 @@ import (
 	"strconv"
 )
 
-func MullItOver(file bool, paramMoi string) int {
-	var mio string
-	var err error
-	errTotal := -1
-	if file {
-		mio, err = MullItOverFile()
-	} else {
-		mio = paramMoi
-		err = nil
-	}
-	if err != nil {
-		fmt.Printf("Error: %s\n", err)
-		return errTotal
-	}
+func PartOne(mio string) int {
 	mulSlc, err := findMuls(mio)
 	if err != nil {
 		fmt.Println(err)
-		return errTotal
+		return -1
 	}
 	total, err := multTotal(mulSlc)
 	if err != nil {
 		fmt.Println(err)
-		return errTotal
+		return -1
 	}
 	return total
 }
 
-func DosAndDonts(file bool, paramMoi string) int {
-	var mio string
-	var err error
-	if file {
-		mio, err = MullItOverFile()
-	} else {
-		mio = paramMoi
-		err = nil
-	}
-	if err != nil {
-		fmt.Printf("Error: %s\n", err)
-	}
+func PartTwo(mio string) int {
 	rmds, err := removeDonts(mio)
 	if err != nil {
 		fmt.Println(err)

@@ -4,46 +4,48 @@ import (
 	"testing"
 )
 
-func TestCeresSearchAoCInput(t *testing.T) {
-	file := true
-	cs := [][]string{}
-	total := CeresSearch(file, cs)
+func TestPartOneAoCInput(t *testing.T) {
+	cs, err := CeresSearchFile()
+	if err != nil {
+		t.Error(err)
+	}
+	total := PartOne(cs)
 	if total != 2543 {
 		t.Errorf("Ceres Search total = %d, expected 3", total)
 	}
 }
 
-func TestCeresSearch(t *testing.T) {
-	file := false
+func TestPartOne(t *testing.T) {
 	cs := [][]string{
 		{"X", "M", "A", "S"},
 		{"M", "M", "S", "A"},
 		{"A", "S", "A", "X"},
 		{"S", "X", "M", "S"},
 	}
-	total := CeresSearch(file, cs)
+	total := PartOne(cs)
 	if total != 3 {
 		t.Errorf("Ceres Search total = %d, expected 3", total)
 	}
 }
 
-func TestXmasAoCInput(t *testing.T) {
-	file := true
-	cs := [][]string{}
-	total := Xmas(file, cs)
+func TestPartTwoAoCInput(t *testing.T) {
+	cs, err := CeresSearchFile()
+	if err != nil {
+		t.Error(err)
+	}
+	total := PartTwo(cs)
 	if total != 1930 {
 		t.Errorf("Xmas Cross total = %d, expected 1", total)
 	}
 }
 
-func TestXmas(t *testing.T) {
-	file := false
+func TestPartTwo(t *testing.T) {
 	cs := [][]string{
 		{"M", ".", "M"},
 		{".", "A", "."},
 		{"S", ".", "S"},
 	}
-	total := Xmas(file, cs)
+	total := PartTwo(cs)
 	if total != 1 {
 		t.Errorf("Xmas Cross total = %d, expected 1", total)
 	}

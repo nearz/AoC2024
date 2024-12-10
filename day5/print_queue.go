@@ -1,33 +1,13 @@
 package day5
 
-func PrintQueue(file bool, paramRules [][]int, paramPqs [][]int) int {
-	var rules [][]int
-	var pqs [][]int
-	if file {
-		rules = Rules()
-		pqs = ActivePrintQueues()
-	} else {
-		rules = paramRules
-		pqs = paramPqs
-	}
-
+func PartOne(rules [][]int, pqs [][]int) int {
 	pm := priorityMap(rules)
 	cqs, _ := sortedQueues(pm, pqs)
 	total := totalOfMiddles(cqs)
 	return total
 }
 
-func CorrectTheQueues(file bool, paramRules [][]int, paramPqs [][]int) int {
-	var rules [][]int
-	var pqs [][]int
-	if file {
-		rules = Rules()
-		pqs = ActivePrintQueues()
-	} else {
-		rules = paramRules
-		pqs = paramPqs
-	}
-
+func PartTwo(rules [][]int, pqs [][]int) int {
 	pm := priorityMap(rules)
 	_, iqs := sortedQueues(pm, pqs)
 	for _, q := range iqs {
@@ -59,14 +39,10 @@ func fixQ(pm map[int][]int, q []int) {
 func totalOfMiddles(cqs [][]int) int {
 	total := 0
 	for _, c := range cqs {
-		total += middleOf(c)
+		m := len(c) / 2
+		total += c[m]
 	}
 	return total
-}
-
-func middleOf(s []int) int {
-	m := len(s) / 2
-	return s[m]
 }
 
 func sortedQueues(pm map[int][]int, pqs [][]int) ([][]int, [][]int) {

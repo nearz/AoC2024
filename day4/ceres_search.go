@@ -1,7 +1,5 @@
 package day4
 
-import "fmt"
-
 var dirs = map[string][]int{
 	"l":  {-1, 0},
 	"ul": {-1, -1},
@@ -15,27 +13,29 @@ var dirs = map[string][]int{
 
 const find = "XMAS"
 
-func CeresSearch(file bool, paramCs [][]string) int {
-	var cs [][]string
-	var err error
-	errTotal := -1
-	if file {
-		cs, err = CeresSearchFile()
-	} else {
-		cs = paramCs
-		err = nil
-	}
-	if err != nil {
-		fmt.Printf("Error: %s\n", err)
-		return errTotal
-	}
-
+func PartOne(cs [][]string) int {
 	finalCount := 0
 	for i := range cs {
 		for j := range len(cs[i]) {
 			checkDirs := cs[i][j] == string(find[0])
 			if checkDirs {
 				finalCount += allDirs(j, i, cs)
+			}
+		}
+	}
+	return finalCount
+}
+
+func PartTwo(cs [][]string) int {
+	finalCount := 0
+	for i := range cs {
+		for j := range len(cs[i]) {
+			checkXmas := cs[i][j] == "A"
+			if checkXmas {
+				check := isXmas(j, i, cs)
+				if check {
+					finalCount++
+				}
 			}
 		}
 	}
@@ -66,36 +66,6 @@ func allDirs(x, y int, cs [][]string) int {
 		}
 	}
 	return foundCount
-}
-
-func Xmas(file bool, paramCs [][]string) int {
-	var cs [][]string
-	var err error
-	errTotal := -1
-	if file {
-		cs, err = CeresSearchFile()
-	} else {
-		cs = paramCs
-		err = nil
-	}
-	if err != nil {
-		fmt.Printf("Error: %s\n", err)
-		return errTotal
-	}
-
-	finalCount := 0
-	for i := range cs {
-		for j := range len(cs[i]) {
-			checkXmas := cs[i][j] == "A"
-			if checkXmas {
-				check := isXmas(j, i, cs)
-				if check {
-					finalCount++
-				}
-			}
-		}
-	}
-	return finalCount
 }
 
 func isXmas(x, y int, cs [][]string) bool {

@@ -4,18 +4,16 @@ import (
 	"testing"
 )
 
-func TestPrinterQueueAoCInput(t *testing.T) {
-	file := true
-	rules := [][]int{}
-	pqs := [][]int{}
-	total := PrintQueue(file, rules, pqs)
+func TestPartOneAoCInput(t *testing.T) {
+	rules := Rules()
+	pqs := ActivePrintQueues()
+	total := PartOne(rules, pqs)
 	if total != 5732 {
 		t.Errorf("Printer Q Aoc Input total = %d, expected 5732", total)
 	}
 }
 
-func TestPrinterQueue(t *testing.T) {
-	file := false
+func TestPartOne(t *testing.T) {
 	rules := [][]int{
 		{47, 53},
 		{97, 13},
@@ -47,24 +45,22 @@ func TestPrinterQueue(t *testing.T) {
 		{61, 13, 29},
 		{97, 13, 75, 29, 47},
 	}
-	total := PrintQueue(file, rules, pqs)
+	total := PartOne(rules, pqs)
 	if total != 143 {
 		t.Errorf("Print Queues total = %d, expected 143", total)
 	}
 }
 
-func TestCorrectTheQueuesAoCInput(t *testing.T) {
-	file := true
-	rules := [][]int{}
-	pqs := [][]int{}
-	total := CorrectTheQueues(file, rules, pqs)
+func TestPartTwoAoCInput(t *testing.T) {
+	rules := Rules()
+	pqs := ActivePrintQueues()
+	total := PartTwo(rules, pqs)
 	if total != 4716 {
 		t.Errorf("Printer Q Aoc Input total = %d, expected 4716", total)
 	}
 }
 
-func TestCorrectTheQueues(t *testing.T) {
-	file := false
+func TestPartTwo(t *testing.T) {
 	rules := [][]int{
 		{47, 53},
 		{97, 13},
@@ -96,7 +92,7 @@ func TestCorrectTheQueues(t *testing.T) {
 		{61, 13, 29},
 		{97, 13, 75, 29, 47},
 	}
-	total := CorrectTheQueues(file, rules, pqs)
+	total := PartTwo(rules, pqs)
 	if total != 123 {
 		t.Errorf("Print Queues total = %d, expected 123", total)
 	}

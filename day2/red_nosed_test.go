@@ -4,10 +4,12 @@ import (
 	"testing"
 )
 
-func TestRedNosedAoCInput(t *testing.T) {
-	file := true
-	reports := [][]int{}
-	safetyCount := RedNosed(file, reports)
+func TestPartOneAoCInput(t *testing.T) {
+	reports, err := RedNosedFile()
+	if err != nil {
+		t.Error(err)
+	}
+	safetyCount := PartOne(reports)
 	if safetyCount["safe"] != 213 {
 		t.Errorf("Safe count = %d, expected 213", safetyCount["safe"])
 	}
@@ -17,8 +19,7 @@ func TestRedNosedAoCInput(t *testing.T) {
 	}
 }
 
-func TestRedNosed(t *testing.T) {
-	file := false
+func TestPartOne(t *testing.T) {
 	reports := [][]int{
 		{7, 6, 4, 2, 1},
 		{1, 2, 7, 8, 9},
@@ -27,7 +28,7 @@ func TestRedNosed(t *testing.T) {
 		{8, 6, 4, 4, 1},
 		{1, 3, 6, 7, 9},
 	}
-	safetyCount := RedNosed(file, reports)
+	safetyCount := PartOne(reports)
 	if safetyCount["safe"] != 2 {
 		t.Errorf("Safe count = %d, expected 2", safetyCount["safe"])
 	}
@@ -36,10 +37,12 @@ func TestRedNosed(t *testing.T) {
 	}
 }
 
-func TestRedNosedDampenedAoCInput(t *testing.T) {
-	file := true
-	reports := [][]int{}
-	safetyCount := RedNosedDampened(file, reports)
+func TestPartTwoAoCInput(t *testing.T) {
+	reports, err := RedNosedFile()
+	if err != nil {
+		t.Error(err)
+	}
+	safetyCount := PartTwo(reports)
 	if safetyCount["safe"] != 285 {
 		t.Errorf("Safe count = %d, expected 285", safetyCount["safe"])
 	}
@@ -48,25 +51,7 @@ func TestRedNosedDampenedAoCInput(t *testing.T) {
 	}
 }
 
-// func TestTemp(t *testing.T) {
-// 	file := false
-// 	r := [][]int{
-// 		{69, 71, 69, 66, 63},
-// 		{15, 13, 15, 16, 17, 20, 21, 24},
-// 	}
-// 	c := RedNosedDampened(file, r)
-// 	fmt.Println(c)
-// }
-
-//
-// func TestUnsafe(t *testing.T) {
-// 	r := []int{69, 71, 69, 66, 63}
-// 	u := unsafeLevel(r)
-// 	fmt.Println(u)
-// }
-
-func TestRedNosedDampened(t *testing.T) {
-	file := false
+func TestPartTwo(t *testing.T) {
 	reports := [][]int{
 		{7, 6, 4, 2, 1},
 		{1, 2, 7, 8, 9},
@@ -75,7 +60,7 @@ func TestRedNosedDampened(t *testing.T) {
 		{8, 6, 4, 4, 1},
 		{1, 3, 6, 7, 9},
 	}
-	safetyCount := RedNosedDampened(file, reports)
+	safetyCount := PartTwo(reports)
 	if safetyCount["safe"] != 4 {
 		t.Errorf("Safe count = %d, expected 4", safetyCount["safe"])
 	}

@@ -1,41 +1,17 @@
 package day1
 
 import (
-	"fmt"
 	"sort"
 )
 
-func Hysteria(file bool, paramLeft, paramRight []int) int {
-	var left, right []int
-	var err error
-	if file {
-		left, right, err = HysteriaFile()
-	} else {
-		left, right = paramLeft, paramRight
-		err = nil
-	}
-	if err != nil {
-		fmt.Println(err)
-		return -1
-	}
+func PartOne(left, right []int) int {
 	sort.Ints(left)
 	sort.Ints(right)
 	total := distanceTotal(left, right)
 	return total
 }
 
-func HysteriaMultiples(file bool, paramLeft, paramRight []int) int {
-	var left, right []int
-	var err error
-	if file {
-		left, right, err = HysteriaFile()
-	} else {
-		left, right = paramLeft, paramRight
-		err = nil
-	}
-	if err != nil {
-		fmt.Println(err)
-	}
+func PartTwo(left, right []int) int {
 	scoreTotal := similarityScore(left, right)
 	return scoreTotal
 }
