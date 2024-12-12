@@ -14,62 +14,106 @@ var guardDirs = map[string]string{
 	"<": "l",
 }
 
-var curDir = "u"
+const obs = "#"
 
-const (
-	obs  = "#"
-	mark = "X"
-)
+type point struct {
+	x int
+	y int
+}
+
+type state struct {
+	x   int
+	y   int
+	dir string
+}
 
 func PartOne(gmap [][]string) int {
-	for y, row := range gmap {
-		for x, col := range row {
-			for k := range guardDirs {
-				if k == col {
-					curDir = guardDirs[k]
-					walk(x, y, gmap)
-					break
-				}
-			}
-		}
+	x, y, curDir := initGuardPos(gmap)
+	if x == -1 {
+		return -1
 	}
-	return countPos(gmap, mark)
+	vis := walk(x, y, gmap, curDir)
+	return len(vis)
 }
 
 func PartTwo(gmap [][]string) int {
-	return -1
+	x, y, curDir := initGuardPos(gmap)
+	if x == -1 {
+		return -1
+	}
+	loopCount := 0
+	vis := walk(x, y, gmap, curDir)
+	for v := range vis {
+		if x == v.x && y == v.y {
+			continue
+		}
+		if isLoop(x, y, gmap, curDir, v) {
+			loopCount++
+		}
+	}
+	return loopCount
 }
 
-func walk(x, y int, gmap [][]string) {
+func isLoop(x, y int, gmap [][]string, curDir string, loopMark point) bool {
+	loopState := make(map[state]struct{})
+	inBounds := checkBounds(x, y, gmap)
+	loopState[state{x: x, y: y, dir: curDir}] = struct{}{}
+
+	for inBounds {
+		cx, cy := step(curDir, x, y)
+		inBounds = checkBounds(cx, cy, gmap)
+		if inBounds {
+			if gmap[cy][cx] == obs || (cy == loopMark.y && cx == loopMark.x) {
+				curDir = rotate(curDir)
+			} else {
+				x = cx
+				y = cy
+			}
+			newState := state{x: x, y: y, dir: curDir}
+			if _, ex := loopState[newState]; ex {
+				return true
+			}
+			loopState[newState] = struct{}{}
+		}
+
+	}
+	return false
+}
+
+func walk(x, y int, gmap [][]string, curDir string) map[point]struct{} {
+	vis := make(map[point]struct{})
 	inBounds := checkBounds(x, y, gmap)
 	for inBounds {
 		cx, cy := step(curDir, x, y)
 		inBounds = checkBounds(cx, cy, gmap)
 		if inBounds {
 			if gmap[cy][cx] != obs {
-				gmap[cy][cx] = mark
 				x = cx
 				y = cy
 			} else {
-				rotate()
+				curDir = rotate(curDir)
+			}
+			vis[point{x: x, y: y}] = struct{}{}
+		}
+	}
+	return vis
+}
+
+func initGuardPos(gmap [][]string) (int, int, string) {
+	for y, row := range gmap {
+		for x, col := range row {
+			for k := range guardDirs {
+				if k == col {
+					curDir := guardDirs[k]
+					return x, y, curDir
+				}
 			}
 		}
 	}
+	return -1, -1, ""
 }
 
-func countPos(gmap [][]string, item string) int {
-	count := 0
-	for _, row := range gmap {
-		for _, col := range row {
-			if col == item {
-				count++
-			}
-		}
-	}
-	return count
-}
-
-func rotate() {
+func rotate(curDir string) string {
 	switch curDir {
 	case "l":
 		curDir = "u"
@@ -80,6 +124,7 @@ func rotate() {
 	case "d":
 		curDir = "l"
 	}
+	return curDir
 }
 
 func step(d string, x, y int) (int, int) {

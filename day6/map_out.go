@@ -6,8 +6,7 @@ import (
 	"strings"
 )
 
-func GMapToFile(gmap [][]string) {
-	fn := "gmap.output"
+func GMapToFile(gmap [][]string, fn string) {
 	f, err := os.Create(fn)
 	if err != nil {
 		panic(err)
