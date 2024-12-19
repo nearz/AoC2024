@@ -27,6 +27,38 @@ func PartOne(tmap [][]int) int {
 	return total
 }
 
+func PartTwo(tmap [][]int) int {
+	ths := trailheads(tmap)
+	ranks := make(map[pos]int)
+	for _, t := range ths {
+		v := tmap[t.y][t.x]
+		ranks[t] = walkDistinctTrail(v, t, tmap)
+	}
+	total := 0
+	for r := range ranks {
+		total += ranks[r]
+	}
+	return total
+}
+
+// Just remove visted to account for all paths to 9 from 0
+func walkDistinctTrail(n int, p pos, tmap [][]int) int {
+	count := 0
+	if n == 9 {
+		return 1
+	}
+	for k := range dirs {
+		v := peek(k, p.x, p.y, tmap)
+		if v-tmap[p.y][p.x] == 1 {
+			var nextPos pos
+			nextPos.x, nextPos.y = step(k, p.x, p.y)
+			count += walkDistinctTrail(v, nextPos, tmap)
+
+		}
+	}
+	return count
+}
+
 func walkTrail(n int, p pos, vis map[pos]struct{}, tmap [][]int) int {
 	count := 0
 	if n == 9 {
