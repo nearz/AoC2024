@@ -29,11 +29,10 @@ func PartOne(lst *list.List, blinks int) int {
 }
 
 func PartTwo(smap map[string]int, blinks int) int {
-	spltCache := make(map[string][]string)
 	for range blinks {
 		temp := make(map[string]int)
 		for s, c := range smap {
-			ns := applyRuleWithCache(s, spltCache)
+			ns := applyRuleTwo(s)
 			for _, v := range ns {
 				temp[v] += c
 			}
@@ -47,13 +46,10 @@ func PartTwo(smap map[string]int, blinks int) int {
 	return total
 }
 
-func applyRuleWithCache(s string, spltCache map[string][]string) []string {
+func applyRuleTwo(s string) []string {
 	if s == "0" {
 		return []string{"1"}
 	} else if len(s)%2 == 0 {
-		if val, ok := spltCache[s]; ok {
-			return val
-		}
 		m := len(s) / 2
 		l := s[:m]
 		r := s[m:]
