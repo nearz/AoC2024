@@ -12,49 +12,38 @@ type pos struct {
 	y int
 }
 
-type plot struct {
-	perm int
-	area int
-}
-
 func PartOne(garden [][]string) int {
 	avl := available(garden)
-	res := make(map[pos]plot)
-	for a := range avl {
-		area, pmtr := walkPlot(0, a, avl, garden)
-		plt := plot{perm: pmtr, area: area}
-		res[a] = plt
-	}
 	total := 0
-	for r := range res {
-		plotTotal := res[r].area * res[r].perm
-		total += plotTotal
+	for a := range avl {
+		region := make(map[pos]struct{})
+		rgnVal := garden[a.y][a.x]
+		getRegion(a, rgnVal, avl, region, garden)
+		perim := 0
+		for r := range region {
+			perim += perimeter(r, garden)
+		}
+		total += len(region) * perim
 	}
 	return total
 }
 
-func walkPlot(t int, p pos, avl map[pos]struct{}, garden [][]string) (int, int) {
+func getRegion(p pos, rgnVal string, avl map[pos]struct{}, region map[pos]struct{}, garden [][]string) {
 	delete(avl, p)
-	area := 0
-	pmtr := 0
-	if t == 0 {
-		area++
-		pmtr += perimeter(p, garden)
-	}
+	region[p] = struct{}{}
 	for d := range dirs {
-		v := peek(d, p.x, p.y, garden)
+		x, y := step(d, p.x, p.y)
+		if !checkBounds(x, y, garden) {
+			continue
+		}
 		var np pos
-		np.x, np.y = step(d, p.x, p.y)
+		np.x, np.y = x, y
+		nv := garden[np.y][np.x]
 		_, ok := avl[np]
-		if v == garden[p.y][p.x] && ok {
-			area++
-			pmtr += perimeter(np, garden)
-			a, p := walkPlot(t+1, np, avl, garden)
-			area += a
-			pmtr += p
+		if nv == rgnVal && ok {
+			getRegion(np, rgnVal, avl, region, garden)
 		}
 	}
-	return area, pmtr
 }
 
 func perimeter(p pos, garden [][]string) int {
