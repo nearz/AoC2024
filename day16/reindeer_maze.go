@@ -2,6 +2,7 @@ package day16
 
 import (
 	"fmt"
+	"math"
 )
 
 var dirs = map[string][]int{
@@ -22,6 +23,11 @@ type state struct {
 	cost int
 }
 
+type visState struct {
+	p   pos
+	dir string
+}
+
 type set = map[pos]pos
 
 func PartOne(rmap [][]string) int {
@@ -30,8 +36,57 @@ func PartOne(rmap [][]string) int {
 	return moves(s, e, d, wls)
 }
 
+func addStateQ(q []state, s state) {
+	ins := 0
+	for i, v := range q {
+		if s.cost < v.cost {
+			ins = i
+			break
+		}
+	}
+	q = append(q[:ins], append([]state{s}, q[ins:]...)...)
+}
+
 func moves(s, e pos, curDir string, wls set) int {
-	return -1
+	bestScore := math.MaxInt
+	ss := state{p: s, dir: curDir, cost: 0}
+	vis := make(map[visState]struct{})
+	q := []state{ss}
+	for len(q) > 0 {
+		cur := q[0]
+		q = q[1:]
+		vs := visState{
+			p:   cur.p,
+			dir: cur.dir,
+		}
+		if _, vok := vis[vs]; vok {
+			continue
+		}
+		vis[vs] = struct{}{}
+		for d := range dirs {
+			var ns state
+			ns.p.x, ns.p.y = step(d, cur.p.x, cur.p.y)
+			ns.dir = d
+			if d != cur.dir {
+				ns.cost = cur.cost + 1 + 1000
+			} else {
+				ns.cost = cur.cost + 1
+			}
+			_, wok := wls[ns.p]
+			if !wok {
+				if ns.p != e {
+					addStateQ(q, ns)
+					// q = append(q, ns)
+				} else {
+					if cur.cost < bestScore {
+						bestScore = cur.cost
+					}
+				}
+			}
+		}
+
+	}
+	return bestScore
 }
 
 func startEndWalls(rmap [][]string) (pos, pos, set) {
