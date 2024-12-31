@@ -1,8 +1,8 @@
 package day16
 
 import (
+	"container/heap"
 	"fmt"
-	"math"
 )
 
 var dirs = map[string][]int{
@@ -23,11 +23,6 @@ type state struct {
 	cost int
 }
 
-type visState struct {
-	p   pos
-	dir string
-}
-
 type set = map[pos]pos
 
 func PartOne(rmap [][]string) int {
@@ -36,57 +31,35 @@ func PartOne(rmap [][]string) int {
 	return moves(s, e, d, wls)
 }
 
-func addStateQ(q []state, s state) {
-	ins := 0
-	for i, v := range q {
-		if s.cost < v.cost {
-			ins = i
-			break
-		}
-	}
-	q = append(q[:ins], append([]state{s}, q[ins:]...)...)
-}
-
 func moves(s, e pos, curDir string, wls set) int {
-	bestScore := math.MaxInt
 	ss := state{p: s, dir: curDir, cost: 0}
-	vis := make(map[visState]struct{})
-	q := []state{ss}
+	vis := make(map[string]struct{})
+	q := StateHeap{ss}
 	for len(q) > 0 {
-		cur := q[0]
-		q = q[1:]
-		vs := visState{
-			p:   cur.p,
-			dir: cur.dir,
-		}
-		if _, vok := vis[vs]; vok {
+		cur := heap.Pop(&q).(state)
+		key := fmt.Sprintf("%d,%d,%s", cur.p.x, cur.p.y, cur.dir)
+		if _, vok := vis[key]; vok {
 			continue
 		}
-		vis[vs] = struct{}{}
+		vis[key] = struct{}{}
+		if cur.p == e {
+			return cur.cost
+		}
 		for d := range dirs {
-			var ns state
-			ns.p.x, ns.p.y = step(d, cur.p.x, cur.p.y)
-			ns.dir = d
-			if d != cur.dir {
-				ns.cost = cur.cost + 1 + 1000
-			} else {
-				ns.cost = cur.cost + 1
-			}
-			_, wok := wls[ns.p]
+			x, y := step(d, cur.p.x, cur.p.y)
+			_, wok := wls[pos{x: x, y: y}]
 			if !wok {
-				if ns.p != e {
-					addStateQ(q, ns)
-					// q = append(q, ns)
-				} else {
-					if cur.cost < bestScore {
-						bestScore = cur.cost
-					}
+				nc := cur.cost + 1
+				if d != cur.dir {
+					nc += 1000
 				}
+				ns := state{p: pos{x: x, y: y}, dir: d, cost: nc}
+				heap.Push(&q, ns)
 			}
 		}
 
 	}
-	return bestScore
+	return -1
 }
 
 func startEndWalls(rmap [][]string) (pos, pos, set) {
@@ -112,40 +85,4 @@ func step(d string, x, y int) (int, int) {
 	x = x + dx
 	y = y + dy
 	return x, y
-}
-
-func printMapVisted(s, e pos, wls, vis set, h, w int) {
-	for y := range h {
-		for x := range w {
-			if s.x == x && s.y == y {
-				fmt.Print("S")
-			} else if e.x == x && e.y == y {
-				fmt.Print("E")
-			} else if _, wok := wls[pos{x: x, y: y}]; wok {
-				fmt.Print("#")
-			} else if _, vok := vis[pos{x: x, y: y}]; vok {
-				fmt.Print("-")
-			} else {
-				fmt.Print(".")
-			}
-		}
-		fmt.Println("")
-	}
-}
-
-func printMap(s, e pos, wls set, h, w int) {
-	for y := range h {
-		for x := range w {
-			if s.x == x && s.y == y {
-				fmt.Print("S")
-			} else if e.x == x && e.y == y {
-				fmt.Print("E")
-			} else if _, wok := wls[pos{x: x, y: y}]; wok {
-				fmt.Print("#")
-			} else {
-				fmt.Print(".")
-			}
-		}
-		fmt.Println("")
-	}
 }
