@@ -4,8 +4,7 @@ import (
 	"strings"
 )
 
-func PartOne(twls []string, dsgns []string) int {
-	total := 0
+func PartOne(twls []string, dsgns []string) (total int) {
 	for _, d := range dsgns {
 		mem := make(map[string]int)
 		r := builds(d, twls, mem)
@@ -13,17 +12,16 @@ func PartOne(twls []string, dsgns []string) int {
 			total++
 		}
 	}
-	return total
+	return
 }
 
-func PartTwo(twls []string, dsgns []string) int {
-	total := 0
+func PartTwo(twls []string, dsgns []string) (total int) {
 	for _, d := range dsgns {
 		mem := make(map[string]int)
 		r := builds(d, twls, mem)
 		total += r
 	}
-	return total
+	return
 }
 
 func builds(dsgn string, twls []string, mem map[string]int) (cnt int) {
