@@ -1,2 +1,6 @@
 *.input
 *.output
+*.dot
+*.png
+*.svg
+*.pdf
